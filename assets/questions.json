@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "question": "Often fails to sustain attention in tasks or play activities.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 2,
+    "question": "Seems to not listen when spoken to directly.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 3,
+    "question": "Easily distracted by irrelevant stimuli or noises.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 4,
+    "question": "Difficulty organizing tasks or activities requiring focus.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 5,
+    "question": "Avoids or is reluctant to engage in tasks requiring mental effort.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 6,
+    "question": "Loses items necessary for tasks or activities (e.g., school materials, pencils, books).",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 7,
+    "question": "Often forgetful in daily activities or academic tasks.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 8,
+    "question": "Leaves their seat in situations where staying seated is expected.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 9,
+    "question": "Runs about or climbs excessively in inappropriate situations.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 10,
+    "question": "Talks excessively and interrupts others.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 11,
+    "question": "Blurts out answers before questions have been completed.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 12,
+    "question": "Difficulty waiting their turn in games or group situations.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 13,
+    "question": "Interrupts or intrudes on others’ conversations or activities.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 14,
+    "question": "Exhibits impatience when facing delays or waiting.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 15,
+    "question": "Often fidgets or taps hands or feet, or squirms in seat.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 16,
+    "question": "Difficulty moving from one activity or place to another.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 17,
+    "question": "Resists changes in routine or struggles to accept transitions.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 18,
+    "question": "Fails to complete homework or assigned tasks without reminders.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 19,
+    "question": "Forgets or loses personal belongings (e.g., lunchbox, uniform, notebook).",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  },
+  {
+    "id": 20,
+    "question": "Appears careless or inattentive and doesn't complete tasks even when assigned as important.",
+    "options": ["Always", "Often", "Sometimes", "Rarely", "Not at all"]
+  }
+]
