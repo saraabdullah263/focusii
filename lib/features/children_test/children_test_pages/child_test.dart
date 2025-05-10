@@ -41,7 +41,7 @@ class ChildTest extends StatelessWidget {
                 ),
                  CustomElvatedButton(
                   title: 'Start Video',
-                  onPressed: () =>GoRouter.of(context).push(AppRoutes.kvideoTest)
+                  onPressed: () =>GoRouter.of(context).push(AppRoutes.kwebVeiwVideo)
                 )
               ],
             ),

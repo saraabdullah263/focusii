@@ -4,8 +4,7 @@ import 'package:focusi/features/auth/signup.dart';
 import 'package:focusi/features/children_result/veiw/children_result.dart';
 import 'package:focusi/features/children_test/children_test_pages/child_test.dart';
 import 'package:focusi/features/children_test/children_test_pages/game_test/veiw/game_screen.dart';
-import 'package:focusi/features/children_test/children_test_pages/vedio_test/qestion_test.dart';
-import 'package:focusi/features/children_test/children_test_pages/vedio_test/video_test.dart';
+import 'package:focusi/features/children_test/children_test_pages/vedio_test/veiw/web_veiw_vedio.dart';
 import 'package:focusi/features/children_test/children_test_welcom/childern_test_welcome.dart';
 import 'package:focusi/features/parent_test/veiw/parent_test.dart';
 import 'package:focusi/features/parent_test/veiw/welcome_screen/parent_test_welcom.dart';
@@ -20,10 +19,9 @@ abstract class AppRoutes {
   static const kparentTest = '/parentTest';
   static const kchildTestWelcom = '/childTestWelcom';
   static const kchildTest = '/childTest';
-  static const kvideoTest = '/videoTest';
-  static const kqestionTest = '/qestionTest';
   static const kgameScreen = '/gameScreen';
   static const kchildrenResult = '/childrenResult';
+  static const kwebVeiwVideo='/webVeiwVideo';
 
   static final router = GoRouter(
     routes: [
@@ -47,11 +45,6 @@ abstract class AppRoutes {
         builder: (context, state) => const ChildernTestWelcome(),
       ),
       GoRoute(path: kchildTest, builder: (context, state) => const ChildTest()),
-      GoRoute(path: kvideoTest, builder: (context, state) => const VideoTest()),
-      GoRoute(
-        path: kqestionTest,
-        builder: (context, state) => const QestionTest(),
-      ),
       GoRoute(
         path: kgameScreen,
         builder: (context, state) => const GameScreen(),
@@ -59,6 +52,10 @@ abstract class AppRoutes {
       GoRoute(
         path: kchildrenResult,
         builder: (context, state) => const ChildrenResult(),
+      ),
+       GoRoute(
+        path: kwebVeiwVideo,
+        builder: (context, state) =>  const WebVeiwVedio(),
       ),
     ],
   );
