@@ -1,6 +1,6 @@
-import 'package:focusi/features/auth/forget_passwrd.dart';
-import 'package:focusi/features/auth/login.dart';
-import 'package:focusi/features/auth/signup.dart';
+import 'package:focusi/features/auth/veiw/forget_passwrd.dart';
+import 'package:focusi/features/auth/veiw/login.dart';
+import 'package:focusi/features/auth/veiw/signup.dart';
 import 'package:focusi/features/children_result/veiw/children_result.dart';
 import 'package:focusi/features/children_test/children_test_pages/child_test.dart';
 import 'package:focusi/features/children_test/children_test_pages/game_test/veiw/game_screen.dart';

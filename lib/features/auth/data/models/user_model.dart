@@ -1,0 +1,41 @@
+class UserModel {
+  String? email;
+  String? name;
+  String? gender; // fixed typo
+  String? password;
+  String? confirmPassword; // improved naming consistency
+  int? age;
+  String? token;
+
+  UserModel({
+    this.email,
+    this.name,
+    this.token,
+    this.age,
+    this.confirmPassword,
+    this.gender,
+    this.password,
+  });
+
+  UserModel.fromJson(Map<String, dynamic> json) {
+    email = json['email'];
+    name = json['name'];
+    token = json['token'];
+    age = json['age'];
+    gender = json['gender'];
+    password = json['password'];
+    confirmPassword = json['confirmPassword'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['email'] = email;
+    data['name'] = name;
+    data['token'] = token;
+    data['age'] = age;
+    data['gender'] = gender;
+    data['password'] = password;
+    data['confirmPassword'] = confirmPassword;
+    return data;
+  }
+}

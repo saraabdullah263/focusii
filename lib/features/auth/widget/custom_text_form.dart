@@ -10,6 +10,7 @@ class Customtextform extends StatefulWidget {
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
   final bool password;
+    final void Function(String)? onChanged;
   const Customtextform(
       {super.key,
       required this.hintText,
@@ -18,7 +19,9 @@ class Customtextform extends StatefulWidget {
       this.prefixIcon,
       this.suffixIcon,
       this.validator,
-      this.keyboardType});
+      this.keyboardType,
+      this.onChanged
+      });
 
   @override
   State<Customtextform> createState() => _CustomtextformState();
@@ -29,6 +32,7 @@ class _CustomtextformState extends State<Customtextform> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: widget.myController,
       validator: widget.validator,
       keyboardType: widget.keyboardType,
@@ -60,7 +64,7 @@ class _CustomtextformState extends State<Customtextform> {
                   size: 25,
                 ))
             : widget.suffixIcon,
-            errorStyle: const TextStyle(color: Colors.red),
+            errorStyle: const TextStyle(color: Colors.black,fontSize: 15),
       ),
     );
   }
