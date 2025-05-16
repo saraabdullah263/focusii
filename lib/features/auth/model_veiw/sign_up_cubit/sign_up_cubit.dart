@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusi/core/utles/shared_preferance.dart';
 import 'package:focusi/features/auth/data/repos/auth_repo.dart';
 import 'package:focusi/features/auth/data/models/user_model.dart';
 import 'package:focusi/core/errors/failure.dart';
@@ -25,7 +24,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     result.fold(
       (failure) => emit(SignUpFailure(_mapFailureToMessage(failure))),
       (user) async {
-        await _cacheUserData(user); // Save user data
+       // await _cacheUserData(user); // Save user data
         emit(SignUpSuccess(user));
       },
     );
@@ -38,12 +37,12 @@ class SignUpCubit extends Cubit<SignUpState> {
     return "Unexpected error occurred.";
   }
 
-  Future<void> _cacheUserData(UserModel user) async {
-    if (user.token != null) {
-      await SharedPreferance.setString('token', user.token!);
-      await SharedPreferance.setString('email', user.email ?? '');
-      await SharedPreferance.setString('name', user.name ?? '');
-      await SharedPreferance.setBool('isSignedIn', true);
-    }
-  }
+  // Future<void> _cacheUserData(UserModel user) async {
+  //   if (user.token != null) {
+  //     await SharedPreferance.setString('token', user.token!);
+  //     await SharedPreferance.setString('email', user.email ?? '');
+  //     await SharedPreferance.setString('name', user.name ?? '');
+  //     await SharedPreferance.setBool('isSignedIn', true);
+  //   }
+  // }
 }

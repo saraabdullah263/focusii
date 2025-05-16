@@ -9,11 +9,24 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> loginUser(String email, String password) async {
     emit(LoginLoading());
+
     final result = await authRepo.loginUser(email: email, password: password);
+
     result.fold(
-      (failure) => emit(LoginFailure(failure.errMessage)),
+      (failure) {
+        String error = failure.errMessage.toLowerCase();
+        String errorMessage = failure.errMessage;
+
+        if (error.contains('invalid') ||
+            error.contains('unauthorized') ||
+            error.contains('incorrect') ||
+            error.contains('wrong')) {
+          errorMessage = 'Incorrect email or password. Please try again.';
+        }
+
+        emit(LoginFailure(errorMessage));
+      },
       (user) => emit(LoginSuccess()),
-    
     );
   }
 }

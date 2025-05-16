@@ -11,35 +11,37 @@ class ParentTestWelcom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.asset(AppImages.logoWhite),
-          SizedBox(
-                  height: MediaQuery.of(context).size.height * .12,
-                ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Center(
-                    child: Text(
-                  'first we do some tests to determine child distraction ratio',
-                  style: TextStyle(fontSize: 40, color: Colors.white),
-                )),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .12,
-                ),
-                CustomElvatedButton(
-                  title: 'Go To parent Test',
-                  onPressed: () =>GoRouter.of(context).push(AppRoutes.kparentTest)
-                )
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset(AppImages.logoWhite),
+            SizedBox(
+                    height: MediaQuery.of(context).size.height * .12,
+                  ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Center(
+                      child: Text(
+                    'first we do some tests to determine child distraction ratio',
+                    style: TextStyle(fontSize: 40, color: Colors.white),
+                  )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .12,
+                  ),
+                  CustomElvatedButton(
+                    title: 'Go To parent Test',
+                    onPressed: () =>GoRouter.of(context).push(AppRoutes.kparentTest)
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

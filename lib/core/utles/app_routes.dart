@@ -1,11 +1,13 @@
 import 'package:focusi/features/auth/veiw/forget_passwrd.dart';
 import 'package:focusi/features/auth/veiw/login.dart';
+import 'package:focusi/features/auth/veiw/reset_password.dart';
 import 'package:focusi/features/auth/veiw/signup.dart';
 import 'package:focusi/features/children_result/veiw/children_result.dart';
 import 'package:focusi/features/children_test/children_test_pages/child_test.dart';
 import 'package:focusi/features/children_test/children_test_pages/game_test/veiw/game_screen.dart';
 import 'package:focusi/features/children_test/children_test_pages/vedio_test/veiw/web_veiw_vedio.dart';
 import 'package:focusi/features/children_test/children_test_welcom/childern_test_welcome.dart';
+import 'package:focusi/features/home/main_veiw.dart';
 import 'package:focusi/features/parent_test/veiw/parent_test.dart';
 import 'package:focusi/features/parent_test/veiw/welcome_screen/parent_test_welcom.dart';
 import 'package:focusi/screens/splash_screen/splach_screen.dart';
@@ -22,6 +24,8 @@ abstract class AppRoutes {
   static const kgameScreen = '/gameScreen';
   static const kchildrenResult = '/childrenResult';
   static const kwebVeiwVideo='/webVeiwVideo';
+  static const kresetPassword='/resetPassword';
+  static const kmainVeiw='/mainVeiw';
 
   static final router = GoRouter(
     routes: [
@@ -56,6 +60,14 @@ abstract class AppRoutes {
        GoRoute(
         path: kwebVeiwVideo,
         builder: (context, state) =>  const WebVeiwVedio(),
+      ),
+      GoRoute(
+        path: kresetPassword,
+        builder: (context, state) =>  const ResetPassword(),
+      ),
+      GoRoute(
+        path: kmainVeiw,
+        builder: (context, state) =>  const MainVeiw(),
       ),
     ],
   );

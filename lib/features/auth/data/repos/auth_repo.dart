@@ -15,4 +15,17 @@ abstract class AuthRepo {
     required email,
     required password
   });
+  Future<Either<Failure,dynamic>>forgetPassword({
+    required email
+  });
+  Future<Either<Failure,dynamic>>resetPassword({
+    required email,
+    required newpassword,
+    required confirmPassword,
+    required token
+  });
+   Future<void> confirmEmail({
+    required String userId,
+    required String token,
+  });
 }

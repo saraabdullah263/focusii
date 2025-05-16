@@ -26,14 +26,23 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
-          if (state is LoginSuccess) {
-            GoRouter.of(context).push(AppRoutes.kparentTestWelcom);
-          } else if (state is LoginFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error)),
-            );
-          }
-        },
+  if (state is LoginSuccess) {
+    GoRouter.of(context).push(AppRoutes.kparentTestWelcom);
+  } else if (state is LoginFailure) {
+    String errorMessage = state.error;
+
+    if (errorMessage.toLowerCase().contains('invalid') ||
+        errorMessage.toLowerCase().contains('wrong') ||
+        errorMessage.toLowerCase().contains('incorrect')) {
+      // Specific message for incorrect credentials
+      errorMessage = 'Incorrect email or password. Please try again.';
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(errorMessage)),
+    );
+  }
+},
         builder: (context, state) {
           return Container(
             padding: const EdgeInsets.all(20),

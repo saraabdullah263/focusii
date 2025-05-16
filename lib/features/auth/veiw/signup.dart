@@ -89,7 +89,7 @@ class _SignupState extends State<Signup> {
     return BlocConsumer<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state is SignUpSuccess) {
-          GoRouter.of(context).push(AppRoutes.kparentTest);
+          GoRouter.of(context).push(AppRoutes.klogin);
         } else if (state is SignUpFailure) {
           ScaffoldMessenger.of(
             context,
