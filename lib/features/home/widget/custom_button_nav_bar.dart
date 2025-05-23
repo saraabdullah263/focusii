@@ -7,7 +7,7 @@ import 'package:focusi/features/home/widget/custom_button_nav_bar_entity.dart';
 // ignore: must_be_immutable
 class CustomButtonNavBar extends StatefulWidget {
   int selectedIndex = 0;
- final ValueChanged<int> onItemTapped;
+  ValueChanged<int> onItemTapped;
    CustomButtonNavBar({super.key,this.selectedIndex = 0, required this.onItemTapped});
 
   @override
@@ -45,7 +45,7 @@ class _CustomButtonNavBarState extends State<CustomButtonNavBar> {
                     widget.onItemTapped(index);
                   });
                 },
-                child: CustomBittonNavBarItem(
+                child: CustomButtonNavBarItem(
                   isSelected: widget.selectedIndex == index,
                   barEntity: item,
                 ));

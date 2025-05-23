@@ -11,8 +11,8 @@ class ActiveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Container(
-        padding: const EdgeInsetsDirectional.only(end: 16),
-        height: isDeviceInPortrait(context) ? 40.h : 90.h,
+       padding: const EdgeInsets.symmetric(horizontal: 12),
+        height: isDeviceInPortrait(context) ? 45.h : 90.h,
         decoration: ShapeDecoration(
             color: const Color(0xffEEEEEE),
             shape: RoundedRectangleBorder(
@@ -21,7 +21,7 @@ class ActiveButton extends StatelessWidget {
           children: [
             Container(
               height: isDeviceInPortrait(context) ? 40.h : 80.h,
-              width: 40.w,
+              width: 30.w,
               padding: const EdgeInsets.all(5),
               decoration: ShapeDecoration(
                 //color: AppColors.primaryColor,

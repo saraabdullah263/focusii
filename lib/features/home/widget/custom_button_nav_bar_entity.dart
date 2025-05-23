@@ -14,7 +14,7 @@ class CustomButtonNavBarEntity {
 }
   List<CustomButtonNavBarEntity> buttonNavigationBarEntityList = [
   CustomButtonNavBarEntity(
-    name: (context) => 'Home', // Use localized text
+    name: (context) => 'Home', 
     activeImage: AppImages.homeActive,
     inActiveImage: AppImages.homeInactive,
   ),

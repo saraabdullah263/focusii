@@ -27,7 +27,7 @@ class _LoginState extends State<Login> {
       body: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
   if (state is LoginSuccess) {
-    GoRouter.of(context).push(AppRoutes.kparentTestWelcom);
+    GoRouter.of(context).go(AppRoutes.kmainVeiw);
   } else if (state is LoginFailure) {
     String errorMessage = state.error;
 
@@ -137,7 +137,7 @@ class _LoginState extends State<Login> {
                       ),
                       SizedBox(height: MediaQuery.of(context).size.height * .05),
                       CustomElvatedButton(
-                        title: state is LoginLoading ? 'Loading...' : 'Login',
+                        title: state is LoginLoading || state is LoginSuccess ? 'Loading...' : 'Login',
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             context.read<LoginCubit>().loginUser(
@@ -178,15 +178,6 @@ class _LoginState extends State<Login> {
                             onPressed: () {},
                             child: const CircleAvatar(
                               backgroundImage: AssetImage(AppImages.feacbookimage),
-                            ),
-                          ),
-                          OutlinedButton(
-                            style: ButtonStyle(
-                              shape: WidgetStateProperty.all(const CircleBorder()),
-                            ),
-                            onPressed: () {},
-                            child: const CircleAvatar(
-                              backgroundImage: AssetImage(AppImages.logoMac),
                             ),
                           ),
                         ],

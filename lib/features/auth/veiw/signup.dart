@@ -310,7 +310,7 @@ class _SignupState extends State<Signup> {
                       ),
                       CustomElvatedButton(
                         title:
-                            state is SignUpLoading ? 'Loading...' : 'Sign Up',
+                            state is SignUpLoading ||state is SignUpSuccess ? 'Loading...' : 'Sign Up',
                         onPressed:
                             state is SignUpLoading
                                 ? null

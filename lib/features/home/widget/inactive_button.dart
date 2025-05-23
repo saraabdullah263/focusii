@@ -11,7 +11,7 @@ class InactiveButton extends StatelessWidget {
   Widget build(BuildContext context) {
      return SvgPicture.asset(
       image,
-      height: isDeviceInPortrait(context) ? 25.h : 65.h,
+      height: isDeviceInPortrait(context) ? 20.h : 50.h,
       width: 25.w,
     );
   }

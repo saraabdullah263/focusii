@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:focusi/core/api/api_servecis.dart';
 import 'package:focusi/core/utles/app_colors.dart';
 import 'package:focusi/core/utles/app_routes.dart';
@@ -39,15 +40,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: MaterialApp.router(
-        routerConfig: AppRoutes.router,
-       debugShowCheckedModeBanner: false,
-       theme: ThemeData(
-         fontFamily: 'Exo-Bold',
-          scaffoldBackgroundColor: AppColors.primaryColor,
-       ),
-      
+      child: ScreenUtilInit(
+        designSize: const Size(360, 800),
+         minTextAdapt: false,
+          splitScreenMode: true,
+        child: MaterialApp.router(
+          routerConfig: AppRoutes.router,
+         debugShowCheckedModeBanner: false,
+         theme: ThemeData(
+           fontFamily: 'Exo-Bold',
+            scaffoldBackgroundColor: AppColors.primaryColor,
+         ),
         
+          
+        ),
       ),
     );
   }

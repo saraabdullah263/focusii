@@ -7,7 +7,8 @@ import 'package:focusi/features/children_test/children_test_pages/child_test.dar
 import 'package:focusi/features/children_test/children_test_pages/game_test/veiw/game_screen.dart';
 import 'package:focusi/features/children_test/children_test_pages/vedio_test/veiw/web_veiw_vedio.dart';
 import 'package:focusi/features/children_test/children_test_welcom/childern_test_welcome.dart';
-import 'package:focusi/features/home/main_veiw.dart';
+import 'package:focusi/features/home/veiw/feedback_veiw.dart';
+import 'package:focusi/features/home/veiw/main_veiw.dart';
 import 'package:focusi/features/parent_test/veiw/parent_test.dart';
 import 'package:focusi/features/parent_test/veiw/welcome_screen/parent_test_welcom.dart';
 import 'package:focusi/screens/splash_screen/splach_screen.dart';
@@ -23,9 +24,10 @@ abstract class AppRoutes {
   static const kchildTest = '/childTest';
   static const kgameScreen = '/gameScreen';
   static const kchildrenResult = '/childrenResult';
-  static const kwebVeiwVideo='/webVeiwVideo';
-  static const kresetPassword='/resetPassword';
-  static const kmainVeiw='/mainVeiw';
+  static const kwebVeiwVideo = '/webVeiwVideo';
+  static const kresetPassword = '/resetPassword';
+  static const kmainVeiw = '/mainVeiw';
+  static const kfeedbackVeiw = '/feedbackVeiw';
 
   static final router = GoRouter(
     routes: [
@@ -57,18 +59,16 @@ abstract class AppRoutes {
         path: kchildrenResult,
         builder: (context, state) => const ChildrenResult(),
       ),
-       GoRoute(
+      GoRoute(
         path: kwebVeiwVideo,
-        builder: (context, state) =>  const WebVeiwVedio(),
+        builder: (context, state) => const WebVeiwVedio(),
       ),
       GoRoute(
         path: kresetPassword,
-        builder: (context, state) =>  const ResetPassword(),
+        builder: (context, state) => const ResetPassword(),
       ),
-      GoRoute(
-        path: kmainVeiw,
-        builder: (context, state) =>  const MainVeiw(),
-      ),
+      GoRoute(path: kmainVeiw, builder: (context, state) => const MainVeiw()),
+       GoRoute(path: kfeedbackVeiw, builder: (context, state) => const FeedbackVeiw()),
     ],
   );
 }

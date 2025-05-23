@@ -5,14 +5,14 @@ class AppImages {
   static const String feacbookimage = 'assets/images/facebookicon.png';
   static const String logoMac = 'assets/images/logomac.jpg';
   static const String logoWhite = 'assets/images/logowhite.png';
-  static const String analyticsActive = 'assets/images/AnalyticsActive.png';
+  static const String analyticsActive = 'assets/images/analyticsactive.svg';
   static const String analyticsInactive =
-      'aassets/images/analyticsInactive.png';
-  static const String homeActive = 'assets/images/homeActive.png';
-  static const String homeInactive = 'assets/images/homeInactive.png';
-  static const String personActive = 'assets/images/personActive.png';
-  static const String personInactive = 'assets/images/personInactive.png';
-  static const String taskmangerActive = 'assets/images/taskmangerActive.png';
+      'assets/images/analyticsinactive.svg';
+  static const String homeActive = 'assets/images/homeactive.svg';
+  static const String homeInactive = 'assets/images/homeinactive.svg';
+  static const String personActive = 'assets/images/profileactive.svg';
+  static const String personInactive = 'assets/images/profileinactive.svg';
+  static const String taskmangerActive = 'assets/images/taskmangeractive.svg';
   static const String taskmangerInactive =
-      'assets/images/taskmangerInactive.png';
+      'assets/images/taskmanagerinactive.svg';
 }
