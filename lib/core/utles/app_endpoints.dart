@@ -5,4 +5,5 @@ class AppEndpoints {
   static const String forgetPassword='Account/forgetpassword';
   static const String resetPassword='Account/resetPassword';
   static const String confirmPassword='Account/confirmEmail';
+  static const String parentTest='Tests/ParentsTest';
 }

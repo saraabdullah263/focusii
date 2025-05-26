@@ -22,4 +22,18 @@ class ApiServecis {
 
     return response.data;
   }
+  Future<dynamic> put({
+    required String endPoint,
+    required dynamic data,
+    Map<String, dynamic>? headers,
+  }) async {
+    final response = await dio.put(
+      '$_baseUrl$endPoint',
+      data: data,
+      options: Options(
+        headers: headers,
+      ),
+    );
+    return response.data;
+  }
 }

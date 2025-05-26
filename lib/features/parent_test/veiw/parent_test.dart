@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusi/core/helper_function.dart/cache_helper.dart';
 import 'package:focusi/core/utles/app_colors.dart';
 import 'package:focusi/core/utles/app_images.dart';
 import 'package:focusi/core/utles/app_routes.dart';
 import 'package:focusi/core/widget/custom_loading.dart';
 import 'package:focusi/core/widget/custom_radio_group.dart';
 import 'package:focusi/features/provider/parent_test_provider.dart';
+import 'package:focusi/features/parent_test/model_veiw/parent_test_state.dart';
+import 'package:focusi/features/parent_test/model_veiw/parent_test_cubit.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:provider/provider.dart';
 
 class ParentTest extends StatefulWidget {
@@ -29,9 +32,9 @@ class _ParentTestState extends State<ParentTest> {
 
     return Scaffold(
       body: testQuestions.questions.isEmpty
-          ? CustomLoading()
+          ? const CustomLoading()
           : SingleChildScrollView(
-            child: Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(AppImages.logoWhite),
@@ -49,17 +52,18 @@ class _ParentTestState extends State<ParentTest> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 IconButton(
-                                  icon: Icon(Icons.arrow_back_ios_new),
+                                  icon: const Icon(Icons.arrow_back_ios_new),
                                   onPressed: testQuestions.previousQuestion,
                                 ),
                                 Text(
                                   '${testQuestions.currentIndex + 1}/${testQuestions.questions.length}',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * .02,
+                              height:
+                                  MediaQuery.of(context).size.height * .02,
                             ),
                             Stack(
                               children: [
@@ -74,7 +78,8 @@ class _ParentTestState extends State<ParentTest> {
                                 LayoutBuilder(
                                   builder: (context, constraints) {
                                     return AnimatedContainer(
-                                      duration: Duration(milliseconds: 300),
+                                      duration:
+                                          const Duration(milliseconds: 300),
                                       height: 10,
                                       width: constraints.maxWidth *
                                           (testQuestions.currentIndex + 1) /
@@ -89,7 +94,8 @@ class _ParentTestState extends State<ParentTest> {
                               ],
                             ),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * .02,
+                              height:
+                                  MediaQuery.of(context).size.height * .02,
                             ),
                             Container(
                               decoration: BoxDecoration(
@@ -130,46 +136,93 @@ class _ParentTestState extends State<ParentTest> {
                               ),
                             ),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * .1,
+                              height:
+                                  MediaQuery.of(context).size.height * .1,
                             ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: testQuestions.currentIndex ==
-                                        testQuestions.questions.length - 1
-                                    ? Colors.green
-                                    : Colors.grey[800],
-                                foregroundColor: Colors.white,
-                                minimumSize: const Size(double.infinity, 50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              onPressed: () {
-                                // Check if the answer is selected before proceeding
-                                if (testQuestions.getSelectedAnswer(testQuestions.currentIndex) == null) {
-                                  // Show a message if the answer is not selected
+                            // Here is the BlocConsumer wrapping your submit button
+                            BlocConsumer<ParentTestCubit, ParentTestState>(
+                              listener: (context, state) {
+                                if (state is ParentTestSuccess) {
+                                  // On success, navigate
+                                  GoRouter.of(context).pushReplacement(AppRoutes.kchildTestWelcom);
+                                } else if (state is ParentTestFailure) {
+                                  // Show error snackbar
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('Please select an answer!'),
+                                      content: Text(state.message),
                                       backgroundColor: Colors.red,
                                     ),
                                   );
-                                } else {
-                                  if (testQuestions.currentIndex == testQuestions.questions.length - 1) {
-                                    print('All answers: ${testQuestions.selectedAnswers}');
-                                    GoRouter.of(context).pushReplacement(AppRoutes.kchildTestWelcom);
-                                  } else {
-                                    testQuestions.clearAnswer(testQuestions.currentIndex + 1);
-                                    testQuestions.nextQuestion();
-                                  }
                                 }
                               },
-                              child: Text(
-                                testQuestions.currentIndex == testQuestions.questions.length - 1
-                                    ? "Done"
-                                    : "Next →",
-                                style: const TextStyle(fontSize: 20),
-                              ),
+                              builder: (context, state) {
+                                final isLoading = state is ParentTestLoading;
+
+                                return ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: testQuestions.currentIndex ==
+                                            testQuestions.questions.length - 1
+                                        ? Colors.green
+                                        : Colors.grey[800],
+                                    foregroundColor: Colors.white,
+                                    minimumSize: const Size(double.infinity, 50),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
+                                  onPressed: isLoading
+                                      ? null
+                                      : () {
+                                          if (testQuestions.getSelectedAnswer(testQuestions.currentIndex) == null) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(
+                                                content: Text('Please select an answer!'),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                            return;
+                                          }
+
+                                          if (testQuestions.currentIndex ==
+                                              testQuestions.questions.length - 1) {
+                                            // Prepare List<int> answers (non-null)
+                                            final answers = testQuestions.selectedAnswers
+                                                .map((e) => e ?? 1) // fallback 1 if null
+                                                .toList();
+
+                                            final token = CacheHelper.getData(key: 'userToken'); 
+                                            print('Sending token: $token');
+
+                                            // Submit answers with cubit
+                                            context.read<ParentTestCubit>().submitAnswers(
+                                                  token: token,
+                                                  answers: answers,
+                                                );
+                                          } else {
+                                            // Move to next question
+                                            testQuestions.clearAnswer(testQuestions.currentIndex + 1);
+                                            testQuestions.nextQuestion();
+                                          }
+                                        },
+                                        
+                                  child: isLoading
+                                      ? const SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : Text(
+                                          testQuestions.currentIndex ==
+                                                  testQuestions.questions.length - 1
+                                              ? "Done"
+                                              : "Next →",
+                                          style: const TextStyle(fontSize: 20),
+                                        ),
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -178,7 +231,7 @@ class _ParentTestState extends State<ParentTest> {
                   ),
                 ],
               ),
-          ),
+            ),
     );
   }
 }

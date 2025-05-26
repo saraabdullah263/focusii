@@ -27,7 +27,7 @@ class _LoginState extends State<Login> {
       body: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
   if (state is LoginSuccess) {
-    GoRouter.of(context).go(AppRoutes.kmainVeiw);
+    GoRouter.of(context).go(AppRoutes.kparentTest);
   } else if (state is LoginFailure) {
     String errorMessage = state.error;
 

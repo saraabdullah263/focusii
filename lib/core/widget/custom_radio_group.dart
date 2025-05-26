@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomRadioGroup extends StatelessWidget {
-  final List<String> options;
-  final String? selectedValue;
-  final Function(String?) onChanged;
+  final List<String> options; // List of text labels
+  final int? selectedValue;   // selected index
+  final ValueChanged<int?> onChanged;
 
   const CustomRadioGroup({
     super.key,
@@ -15,15 +15,15 @@ class CustomRadioGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: options.map((option) {
-        return RadioListTile<String>(
-          title: Text(option, style: const TextStyle(fontSize: 20)),
-          activeColor: Colors.red,
-          value: option,
+      children: List.generate(options.length, (index) {
+        return RadioListTile<int>(
+          title: Text(options[index]),
+          value: index,
           groupValue: selectedValue,
           onChanged: onChanged,
         );
-      }).toList(),
+      }),
     );
   }
 }
+
