@@ -6,4 +6,6 @@ class AppEndpoints {
   static const String resetPassword='Account/resetPassword';
   static const String confirmPassword='Account/confirmEmail';
   static const String parentTest='Tests/ParentsTest';
+  static const String currentUser='Account/CurrentUser';
+  static const String profilePicture='Account/addProfilePicture';
 }

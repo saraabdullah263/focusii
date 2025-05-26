@@ -10,6 +10,10 @@ import 'package:focusi/features/auth/data/repos/auth_repo_imp.dart';
 import 'package:focusi/features/auth/model_veiw/forget_pasword_cubit/password_cubit.dart';
 import 'package:focusi/features/auth/model_veiw/login_cubit/login_cubit.dart';
 import 'package:focusi/features/auth/model_veiw/sign_up_cubit/sign_up_cubit.dart';
+import 'package:focusi/features/home/date/repo/home_repo_imp.dart';
+import 'package:focusi/features/home/model_veiw/log_out_cubit/logout_cubit.dart';
+import 'package:focusi/features/home/model_veiw/upload_picture_cubit/upload_picture_cubit.dart';
+import 'package:focusi/features/home/model_veiw/user_cubit/user_cubit.dart';
 import 'package:focusi/features/parent_test/data/repo/test_repo_impl.dart';
 import 'package:focusi/features/parent_test/model_veiw/parent_test_cubit.dart';
 import 'package:focusi/features/provider/parent_test_provider.dart';
@@ -23,6 +27,7 @@ void main() async{
   final apiService = ApiServecis(dio);
   final authRepo = AuthRepoImp(dio, apiService: apiService);
    final testRepo = TestRepoImpl(apiService);
+   final homeRepo=HomeRepoImp(  dio,apiService: apiService);
    runApp(
       MultiProvider(
       providers: [
@@ -31,6 +36,9 @@ void main() async{
         BlocProvider(create: (_)=>LoginCubit(authRepo)),
         BlocProvider(create: (_)=>PasswordCubit(authRepo)),
         BlocProvider(create: (_) => ParentTestCubit(testRepo)),
+        BlocProvider(create: (_) => UserCubit(homeRepo)),
+         BlocProvider(create: (_) => UploadPictureCubit(homeRepo)),
+          BlocProvider(create: (_) => LogoutCubit(homeRepo)),
       ],
       child: const MyApp(),
     ),

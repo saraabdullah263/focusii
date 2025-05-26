@@ -6,6 +6,8 @@ class UserModel {
   String? confirmPassword; // improved naming consistency
   int? age;
   String? token;
+  String? pictureUrl;
+  DateTime ? dateOfCreation;
 
   UserModel({
     this.email,
@@ -15,6 +17,7 @@ class UserModel {
     this.confirmPassword,
     this.gender,
     this.password,
+    this.pictureUrl, this.dateOfCreation
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +28,10 @@ class UserModel {
     gender = json['gender'];
     password = json['password'];
     confirmPassword = json['confirmPassword'];
+    pictureUrl = json['pictureUrl'];
+    dateOfCreation= json['dateOfCreation'] != null
+          ? DateTime.tryParse(json['dateOfCreation'])
+          : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +43,8 @@ class UserModel {
     data['gender'] = gender;
     data['password'] = password;
     data['confirmPassword'] = confirmPassword;
+    data['pictureUrl'] = pictureUrl;
+    data['dateOfCreation'] = dateOfCreation;
     return data;
   }
 }
