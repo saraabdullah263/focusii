@@ -7,8 +7,11 @@ import 'package:focusi/features/children_test/children_test_pages/child_test.dar
 import 'package:focusi/features/children_test/children_test_pages/game_test/veiw/game_screen.dart';
 import 'package:focusi/features/children_test/children_test_pages/vedio_test/veiw/web_veiw_vedio.dart';
 import 'package:focusi/features/children_test/children_test_welcom/childern_test_welcome.dart';
+import 'package:focusi/features/home/veiw/advices_veiw.dart';
 import 'package:focusi/features/home/veiw/feedback_veiw.dart';
+import 'package:focusi/features/home/veiw/home_veiw.dart';
 import 'package:focusi/features/home/veiw/main_veiw.dart';
+import 'package:focusi/features/home/veiw/stories_veiw.dart';
 import 'package:focusi/features/parent_test/veiw/parent_test.dart';
 import 'package:focusi/features/parent_test/veiw/welcome_screen/parent_test_welcom.dart';
 import 'package:focusi/screens/splash_screen/splach_screen.dart';
@@ -28,6 +31,9 @@ abstract class AppRoutes {
   static const kresetPassword = '/resetPassword';
   static const kmainVeiw = '/mainVeiw';
   static const kfeedbackVeiw = '/feedbackVeiw';
+  static const kadvicesVeiw='/advicesVeiw';
+  static const kstoriesVeiw='/storiesVeiw';
+  static const khomeView='/homeView';
 
   static final router = GoRouter(
     routes: [
@@ -69,6 +75,9 @@ abstract class AppRoutes {
       ),
       GoRoute(path: kmainVeiw, builder: (context, state) => const MainVeiw()),
        GoRoute(path: kfeedbackVeiw, builder: (context, state) => const FeedbackVeiw()),
+        GoRoute(path: kadvicesVeiw, builder: (context, state) => const AdvicesVeiw()),
+          GoRoute(path: kstoriesVeiw, builder: (context, state) => const StoriesVeiw()),
+            GoRoute(path: khomeView, builder: (context, state) => const HomeVeiw()),
     ],
   );
 }

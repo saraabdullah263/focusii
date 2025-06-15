@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:focusi/core/helper_function.dart/cache_helper.dart';
+import 'package:focusi/core/utles/app_colors.dart';
 import 'package:focusi/core/utles/app_images.dart';
 import 'package:focusi/core/utles/app_routes.dart';
 import 'package:focusi/features/home/model_veiw/log_out_cubit/logout_cubit.dart';
@@ -25,6 +27,8 @@ class ProfileVeiw extends StatefulWidget {
 
 class _ProfileVeiwState extends State<ProfileVeiw> {
   File? _image;
+  bool _hasFetchedUser = false;
+  
 
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(
@@ -43,28 +47,43 @@ class _ProfileVeiwState extends State<ProfileVeiw> {
   }
 
   @override
-  void initState() {
-    super.initState();
+void initState() {
+  super.initState();
+
+  if (!_hasFetchedUser) {
     final token = CacheHelper.getData(key: 'userToken');
     debugPrint("🔐 Retrieved Token: $token");
 
     if (token != null && token is String && token.isNotEmpty) {
-      context.read<UserCubit>().fetchCurrentUser(token);
+      // نحط النداء جوه post frame، لكن نمنع التكرار هنا
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<UserCubit>().fetchCurrentUser(token);
+      });
+
+      _hasFetchedUser = true;
     } else {
       debugPrint('❌ Token is null or empty');
     }
   }
+}
+
 
  @override
 Widget build(BuildContext context) {
   final height = MediaQuery.of(context).size.height;
+  
 
   return Scaffold(
     body: BlocConsumer<UploadPictureCubit, UploadPictureState>(
       listener: (context, state) {
         if (state is UploadPictureSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Profile picture uploaded successfully')),
+           Fluttertoast.showToast(
+            msg: "Profile picture uploaded successfully",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor:Colors.white,
+            textColor: AppColors.primaryColor,
+            fontSize: 16.0,
           );
           // Optionally refresh user data here if needed
         } else if (state is UploadPictureFailure) {

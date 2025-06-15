@@ -144,7 +144,7 @@ class _ParentTestState extends State<ParentTest> {
                               listener: (context, state) {
                                 if (state is ParentTestSuccess) {
                                   // On success, navigate
-                                  GoRouter.of(context).pushReplacement(AppRoutes.kchildTestWelcom);
+                                  GoRouter.of(context).pushReplacement(AppRoutes.kgameScreen);
                                 } else if (state is ParentTestFailure) {
                                   // Show error snackbar
                                   ScaffoldMessenger.of(context).showSnackBar(

@@ -29,4 +29,7 @@ class LoginCubit extends Cubit<LoginState> {
       (user) => emit(LoginSuccess()),
     );
   }
+  void emitInitial() {
+    emit(LoginInitial());
+  }
 }

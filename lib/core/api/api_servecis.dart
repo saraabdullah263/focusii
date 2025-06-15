@@ -2,8 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:focusi/core/utles/app_endpoints.dart';
 
 class ApiServecis {
-
-   ApiServecis(this.dio);
+  ApiServecis(this.dio);
   final _baseUrl = AppEndpoints.baseUrl;
   final Dio dio;
 
@@ -19,15 +18,30 @@ class ApiServecis {
     var response = await dio.get(
       '$_baseUrl$endPoint',
     );
-
     return response.data;
   }
+
   Future<dynamic> put({
     required String endPoint,
     required dynamic data,
     Map<String, dynamic>? headers,
   }) async {
     final response = await dio.put(
+      '$_baseUrl$endPoint',
+      data: data,
+      options: Options(
+        headers: headers,
+      ),
+    );
+    return response.data;
+  }
+
+  Future<dynamic> delete({
+    required String endPoint,
+    dynamic data,
+    Map<String, dynamic>? headers,
+  }) async {
+    final response = await dio.delete(
       '$_baseUrl$endPoint',
       data: data,
       options: Options(

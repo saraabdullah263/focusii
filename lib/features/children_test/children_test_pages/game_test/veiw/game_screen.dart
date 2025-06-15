@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:focusi/core/utles/app_colors.dart';
 import 'package:focusi/core/utles/app_images.dart';
+import 'package:focusi/core/utles/app_routes.dart';
 import 'package:focusi/core/widget/card_widget.dart';
 import 'package:focusi/core/widget/custom_elvated_button.dart';
 import 'package:focusi/core/widget/state_widget.dart';
@@ -7,6 +9,7 @@ import 'package:focusi/core/widget/timer_widget.dart';
 import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:focusi/features/children_test/children_test_pages/game_test/model_veiw/card_model.dart';
+import 'package:go_router/go_router.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -41,22 +44,27 @@ class _GameScreenState extends State<GameScreen> {
     //startGame();
   }
 
+ 
   Future<void> _initializeCamera() async {
-    final cameras = await availableCameras();
-    final frontCamera = cameras.firstWhere(
-      (camera) => camera.lensDirection == CameraLensDirection.front,
-      orElse: () => cameras.first,
-    );
+  final cameras = await availableCameras();
+  final frontCamera = cameras.firstWhere(
+    (camera) => camera.lensDirection == CameraLensDirection.front,
+    orElse: () => cameras.first,
+  );
 
-    _cameraController = CameraController(
-      frontCamera,
-      ResolutionPreset.high,
-    );
+  _cameraController = CameraController(
+    frontCamera,
+    ResolutionPreset.high,
+  );
 
-    setState(() {
-      isCameraInitialized = true;
-    });
-  }
+  await _cameraController.initialize(); // <— important: wait for camera to finish initializing
+
+  setState(() {
+    isCameraInitialized = true;
+  });
+}
+
+
 
   void startGame() {
     setState(() {
@@ -156,21 +164,20 @@ class _GameScreenState extends State<GameScreen> {
     backgroundColor: Colors.white, // Set background to black
     title: Text(
       "Result Submitted",
-      style: TextStyle(color: Colors.black), // Set title text color to white
+      style: TextStyle(color:AppColors.primaryColor), // Set title text color to white
     ),
     content: Text(
       "Thanks for playing!",
-      style: TextStyle(color: Colors.black), // Set content text color to white
+      style: TextStyle(color: AppColors.primaryColor), // Set content text color to white
     ),
     actions: [
       TextButton(
         onPressed: () {
-          Navigator.pop(context);
-          Navigator.pop(context);
+            GoRouter.of(context).push(AppRoutes.kmainVeiw);
         },
         child: Text(
           "OK",
-          style: TextStyle(color: Colors.black), // Set button text color to white
+          style: TextStyle(color:AppColors.primaryColor ), // Set button text color to white
         ),
       )
     ],
@@ -179,20 +186,29 @@ class _GameScreenState extends State<GameScreen> {
 
   }
 
+
 void toggleCamera(bool value) {
   setState(() {
     isCameraEnabled = value;
   });
 
-  if (isCameraEnabled) {
+  if (value) {
     _initializeCamera().then((_) {
-      startGame();
-      print(value); // Start the game when the camera is ready
+      startGame(); // only start game after camera is ready
     });
   } else {
-    _cameraController.dispose();
+    if (isCameraInitialized) {
+      _cameraController.dispose();
+    }
+    setState(() {
+      isCameraInitialized = false;
+      showGame = false;
+      gameStarted = false;
+      deck.clear();
+    });
   }
 }
+
 
 
   @override
@@ -241,21 +257,16 @@ void toggleCamera(bool value) {
     ),
   ),
 
-              // if (isCameraEnabled && isCameraInitialized)
-              //   FutureBuilder<void>(
-              //     future: _initializeControllerFuture,
-              //     builder: (context, snapshot) {
-              //       if (snapshot.connectionState == ConnectionState.done) {
-              //         return SizedBox(
-              //           width: 200,
-              //           height: 200,
-              //           child: CameraPreview(_cameraController),
-              //         );
-              //       } else {
-              //         return CustomLoading();
-              //       }
-              //     },
-              //   ),
+             
+              if (isCameraEnabled && isCameraInitialized)
+//   SizedBox(
+//     width: 200,
+//     height: 200,
+//     child: CameraPreview(_cameraController),
+//   )
+// else if (isCameraEnabled)
+//   CustomLoading(),
+
               if (gameStarted) TimerWidget(timeElapsed: timeElapsed),
               SizedBox(height: MediaQuery.of(context).size.height * .04),
               StatsWidget(matchedPairs: matchedPairs, totalFlips: totalFlips),

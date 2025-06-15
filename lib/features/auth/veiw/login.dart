@@ -22,6 +22,13 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
+void initState() {
+  super.initState();
+  context.read<LoginCubit>().emitInitial(); // Reset state to fix button UI
+}
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<LoginCubit, LoginState>(
@@ -107,8 +114,8 @@ class _LoginState extends State<Login> {
                           if (value == null || value.isEmpty) {
                             return 'Password is required';
                           }
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
+                          if (value.length < 8) {
+                            return 'Password must be at least 8 characters';
                           }
                           if (!RegExp(r'(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])').hasMatch(value)) {
                             return 'Use upper, lower, number & symbol';
