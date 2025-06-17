@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusi/core/helper_function.dart/cache_helper.dart';
 import 'package:focusi/core/utles/app_colors.dart';
 import 'package:focusi/core/utles/app_routes.dart';
+import 'package:focusi/core/widget/custom_loading.dart';
 import 'package:focusi/features/home/model_veiw/advice_cubit/advice_cubit.dart';
 import 'package:focusi/features/home/model_veiw/advice_cubit/advice_state.dart';
 import 'package:go_router/go_router.dart';
@@ -74,7 +75,7 @@ class _AdvicesVeiwState extends State<AdvicesVeiw> {
                 if (state is AdviceLoading)
                   const Center(child: Padding(
                     padding: EdgeInsets.all(20),
-                    child: CircularProgressIndicator(),
+                    child: CustomLoading(),
                   ))
                 else if (advices.isNotEmpty)
                   ...advices.asMap().entries.map(

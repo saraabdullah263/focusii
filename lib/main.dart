@@ -14,9 +14,11 @@ import 'package:focusi/features/home/date/repo/home_repo_imp.dart';
 import 'package:focusi/features/home/model_veiw/advice_cubit/advice_cubit.dart';
 import 'package:focusi/features/home/model_veiw/feedback_cubit/feedback_cubit.dart';
 import 'package:focusi/features/home/model_veiw/log_out_cubit/logout_cubit.dart';
+import 'package:focusi/features/home/model_veiw/story_cubit/story_cubit.dart';
 import 'package:focusi/features/home/model_veiw/task_cubit/task_manager_cubit.dart';
 import 'package:focusi/features/home/model_veiw/upload_picture_cubit/upload_picture_cubit.dart';
 import 'package:focusi/features/home/model_veiw/user_cubit/user_cubit.dart';
+import 'package:focusi/features/home/veiw/stories_veiw.dart';
 import 'package:focusi/features/parent_test/data/repo/test_repo_impl.dart';
 import 'package:focusi/features/parent_test/model_veiw/parent_test_cubit.dart';
 import 'package:focusi/features/provider/parent_test_provider.dart';
@@ -45,7 +47,8 @@ void main() async{
         BlocProvider(create: (_) => LogoutCubit(homeRepo)),
         BlocProvider(create: (_)=>FeedbackCubit(homeRepo)),
         BlocProvider(create: (_)=>TaskManagerCubit(homeRepo)),
-        BlocProvider(create:(_)=>AdviceCubit(homeRepo) )
+        BlocProvider(create:(_)=>AdviceCubit(homeRepo) ),
+        BlocProvider(create:(_)=>StoryCubit(homeRepo) )
       ],
       child: const MyApp(),
     ),

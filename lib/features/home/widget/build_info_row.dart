@@ -22,7 +22,7 @@ class BuildInfoRow extends StatelessWidget {
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.primaryColor,
-                      fontSize: 20),
+                      fontSize: 18),
                 ),
               ),
               Expanded(
@@ -32,7 +32,7 @@ class BuildInfoRow extends StatelessWidget {
                   style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 20),
+                      fontSize: 18),
                 ),
               ),
             ],

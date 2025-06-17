@@ -55,7 +55,6 @@ void initState() {
     debugPrint("🔐 Retrieved Token: $token");
 
     if (token != null && token is String && token.isNotEmpty) {
-      // نحط النداء جوه post frame، لكن نمنع التكرار هنا
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<UserCubit>().fetchCurrentUser(token);
       });
@@ -191,10 +190,10 @@ Widget build(BuildContext context) {
                                     label: 'Age: ',
                                     value: '${user.age} years',
                                   ),
-                                  BuildInfoRow(
-                                    label: 'Gender: ',
-                                    value: user.gender ?? '',
-                                  ),
+                                  // BuildInfoRow(
+                                  //   label: 'Gender: ',
+                                  //   value: user.gender ?? '',
+                                  // ),
                                   BuildInfoRow(
                                     label: 'Account Created: ',
                                     value: user.dateOfCreation != null
@@ -206,9 +205,9 @@ Widget build(BuildContext context) {
                                   ),
                                   BuildInfoRow(
                                     label: 'Assigned Class: ',
-                                    value: 'Not assigned yet',
+                                    value: user.childClass??'',
                                   ),
-                                  BuildInfoRow(label: 'Current Score: ', value: '0%'),
+                                  BuildInfoRow(label: 'Current Score: ', value: user.totalScore.toString()),
 
                                   SizedBox(height: height * 0.03),
 

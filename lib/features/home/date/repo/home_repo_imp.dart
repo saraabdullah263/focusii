@@ -8,6 +8,7 @@ import 'package:focusi/core/utles/app_endpoints.dart';
 import 'package:focusi/features/auth/data/models/user_model.dart';
 import 'package:focusi/features/home/date/model/advice_model.dart';
 import 'package:focusi/features/home/date/model/feedback_model.dart';
+import 'package:focusi/features/home/date/model/story_model.dart';
 import 'package:focusi/features/home/date/model/task_model.dart';
 import 'package:focusi/features/home/date/repo/home_repo.dart';
 
@@ -257,7 +258,34 @@ HomeRepoImp(this.dio, {required ApiServecis apiService}) {
     return left(ServerFailure(e.toString()));
   }
   }
+
+  @override
+  Future<Either<Failure, List<StoryModel>>> getStories(String token)async {
+       try {
+    final response = await dio.get(
+      AppEndpoints.story,
+      options: Options(
+        headers: {'Authorization': 'Bearer $token'},
+      ),
+    );
+
+   if (response.statusCode == 200) {
+  final List<dynamic> data = response.data;
+  final List<StoryModel> stories = data
+      .map((item) => StoryModel.fromJson(item as Map<String, dynamic>))
+      .toList();
+  return right(stories);
+} else {
+  return left(ServerFailure('Failed to load stories'));
+}
+} on DioException catch (e) {
+  return left(ServerFailure(e.message ?? 'Something went wrong'));
+} catch (e) {
+  return left(ServerFailure(e.toString()));
+}
   }
+}
+
   
 
 

@@ -8,6 +8,8 @@ class UserModel {
   String? token;
   String? pictureUrl;
   DateTime ? dateOfCreation;
+  String ?childClass;
+  int ?totalScore;
 
   UserModel({
     this.email,
@@ -17,7 +19,9 @@ class UserModel {
     this.confirmPassword,
     this.gender,
     this.password,
-    this.pictureUrl, this.dateOfCreation
+    this.pictureUrl, this.dateOfCreation,
+    this.childClass,
+    this.totalScore
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +33,8 @@ class UserModel {
     password = json['password'];
     confirmPassword = json['confirmPassword'];
     pictureUrl = json['pictureUrl'];
+    childClass=json['childClass'];
+    totalScore=json['totalScore'];
     dateOfCreation= json['dateOfCreation'] != null
           ? DateTime.tryParse(json['dateOfCreation'])
           : null;
@@ -44,7 +50,9 @@ class UserModel {
     data['password'] = password;
     data['confirmPassword'] = confirmPassword;
     data['pictureUrl'] = pictureUrl;
+    data['childClass']=childClass;
     data['dateOfCreation'] = dateOfCreation;
+    data['totalScore']=totalScore;
     return data;
   }
 }
