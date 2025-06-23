@@ -108,12 +108,24 @@ const questions = [
 startWithCameraBtn.addEventListener("click", async () => {
     try {
         cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
-        startCameraTracking();
+                startCameraTracking();
+
     } catch (err) {
         alert("Camera access denied or not available.");
     }
     startVideo();
 });
+//  console.log("✅ JavaScript loaded");
+// startWithCameraBtn.addEventListener("click", () => {
+//     if (window.CameraChannel) {
+//         console.log("✅ Flutter channel found, sending message...");
+//         window.CameraChannel.postMessage("open");
+
+//     } else {
+//         console.log("❌ Flutter channel not found.");
+//         alert("CameraChannel is not available. Make sure you're in Flutter WebView.");
+//     }
+// });
 
 startWithoutCameraBtn.addEventListener("click", () => {
     startVideo();

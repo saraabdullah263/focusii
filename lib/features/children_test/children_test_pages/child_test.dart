@@ -27,7 +27,7 @@ class ChildTest extends StatelessWidget {
                 const Center(
                     child: Text(
                   'child will open the camera in this test and choose any option to do ',
-                  style: TextStyle(fontSize: 40, color: Colors.white),
+                  style: TextStyle(fontSize: 30, color: Colors.white),
                 )),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .12,
@@ -41,7 +41,7 @@ class ChildTest extends StatelessWidget {
                 ),
                  CustomElvatedButton(
                   title: 'Start Video',
-                  onPressed: () =>GoRouter.of(context).push(AppRoutes.kwebVeiwVideo)
+                  onPressed: () =>GoRouter.of(context).push(AppRoutes.kwebView)
                 )
               ],
             ),

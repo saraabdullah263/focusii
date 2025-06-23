@@ -22,34 +22,38 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-void initState() {
-  super.initState();
-  context.read<LoginCubit>().emitInitial(); // Reset state to fix button UI
-}
-
+  void initState() {
+    super.initState();
+    context.read<LoginCubit>().emitInitial(); // Reset state to fix button UI
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
-  if (state is LoginSuccess) {
-    GoRouter.of(context).go(AppRoutes.kmainVeiw);
-  } else if (state is LoginFailure) {
-    String errorMessage = state.error;
+          if (state is LoginSuccess) {
+            final user = state.user;
+            if (user.childClass != null) {
+              GoRouter.of(context).go(AppRoutes.kmainVeiw);
+            } else {
+              GoRouter.of(context).go(AppRoutes.kparentTest);
+            }
+          } else if (state is LoginFailure) {
+            String errorMessage = state.error;
 
-    if (errorMessage.toLowerCase().contains('invalid') ||
-        errorMessage.toLowerCase().contains('wrong') ||
-        errorMessage.toLowerCase().contains('incorrect')) {
-      // Specific message for incorrect credentials
-      errorMessage = 'Incorrect email or password. Please try again.';
-    }
+            if (errorMessage.toLowerCase().contains('invalid') ||
+                errorMessage.toLowerCase().contains('wrong') ||
+                errorMessage.toLowerCase().contains('incorrect')) {
+              // Specific message for incorrect credentials
+              errorMessage = 'Incorrect email or password. Please try again.';
+            }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(errorMessage)),
-    );
-  }
-},
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(errorMessage)));
+          }
+        },
         builder: (context, state) {
           return Container(
             padding: const EdgeInsets.all(20),
@@ -77,7 +81,9 @@ void initState() {
                           ),
                         ),
                       ),
-                      SizedBox(height: MediaQuery.of(context).size.height * .02),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .02,
+                      ),
                       const Text(
                         'Welcome\nBack !',
                         style: TextStyle(
@@ -95,14 +101,18 @@ void initState() {
                           if (value == null || value.isEmpty) {
                             return 'Email is required';
                           }
-                          final emailRegex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
+                          final emailRegex = RegExp(
+                            r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          );
                           if (!emailRegex.hasMatch(value)) {
                             return 'Enter a valid email';
                           }
                           return null;
                         },
                       ),
-                      SizedBox(height: MediaQuery.of(context).size.height * .04),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .04,
+                      ),
                       Customtextform(
                         hintText: 'Enter Password',
                         myController: password,
@@ -117,7 +127,9 @@ void initState() {
                           if (value.length < 8) {
                             return 'Password must be at least 8 characters';
                           }
-                          if (!RegExp(r'(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])').hasMatch(value)) {
+                          if (!RegExp(
+                            r'(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])',
+                          ).hasMatch(value)) {
                             return 'Use upper, lower, number & symbol';
                           }
                           return null;
@@ -137,59 +149,35 @@ void initState() {
                               ),
                             ),
                             onTap: () {
-                              GoRouter.of(context).push(AppRoutes.kforgetPassword);
+                              GoRouter.of(
+                                context,
+                              ).push(AppRoutes.kforgetPassword);
                             },
                           ),
                         ],
                       ),
-                      SizedBox(height: MediaQuery.of(context).size.height * .05),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .05,
+                      ),
                       CustomElvatedButton(
-                        title: state is LoginLoading || state is LoginSuccess ? 'Loading...' : 'Login',
+                        title:
+                            state is LoginLoading || state is LoginSuccess
+                                ? 'Loading...'
+                                : 'Login',
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             context.read<LoginCubit>().loginUser(
-                                   email.text,
-                                   password.text,
-                                );
+                              email.text,
+                              password.text,
+                            );
                           }
                         },
                       ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-                      const Center(
-                        child: Text(
-                          '- Or Login With -',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.08,
                       ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          OutlinedButton(
-                            style: ButtonStyle(
-                              shape: WidgetStateProperty.all(const CircleBorder()),
-                            ),
-                            onPressed: () {},
-                            child: const CircleAvatar(
-                              backgroundImage: AssetImage(AppImages.googleimage),
-                            ),
-                          ),
-                          OutlinedButton(
-                            style: ButtonStyle(
-                              shape: WidgetStateProperty.all(const CircleBorder()),
-                            ),
-                            onPressed: () {},
-                            child: const CircleAvatar(
-                              backgroundImage: AssetImage(AppImages.feacbookimage),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
+      
+
                       Container(
                         margin: const EdgeInsets.only(top: 10),
                         child: Row(
@@ -197,7 +185,10 @@ void initState() {
                           children: [
                             const Text(
                               "if you don't have account ?",
-                              style: TextStyle(fontSize: 18, color: Colors.white),
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
                             ),
                             InkWell(
                               onTap: () {

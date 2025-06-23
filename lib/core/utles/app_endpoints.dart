@@ -15,4 +15,5 @@ class AppEndpoints {
   static const String deleteTask='DailyRoutine/delete';
   static const String advice="ChildClass/Advice";
   static const String story="ChildClass/Story";
+  static const String getAllVideos="ChildClass/allVideos";
 }

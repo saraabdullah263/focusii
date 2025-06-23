@@ -22,9 +22,9 @@ class FeedbackVeiw extends StatefulWidget {
 }
 
 class _FeedbackVeiwState extends State<FeedbackVeiw> {
-  String questionFourAnswer = 'Yes';
-  String questionFiveAnswer = 'Yes';
-  String questionSixAnswer = 'Yes';
+  String questionFourAnswer = 'null';
+  String questionFiveAnswer = 'null';
+  String questionSixAnswer = 'null';
 
   List<String> dropdownItems = ['Games', 'Vedios', 'Stories', 'Advices'];
   String? questionSevenAnswer;
@@ -50,7 +50,7 @@ class _FeedbackVeiwState extends State<FeedbackVeiw> {
             textColor: AppColors.primaryColor,
             fontSize: 16.0,
           );
-          GoRouter.of(context).push(AppRoutes.kmainVeiw);
+          GoRouter.of(context).push(AppRoutes.kprofileView);
         } else if (state is FeedbackFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.error)),

@@ -8,6 +8,7 @@ import 'package:focusi/core/utles/app_endpoints.dart';
 import 'package:focusi/features/auth/data/models/user_model.dart';
 import 'package:focusi/features/home/date/model/advice_model.dart';
 import 'package:focusi/features/home/date/model/feedback_model.dart';
+import 'package:focusi/features/home/date/model/question_vedio_model.dart';
 import 'package:focusi/features/home/date/model/story_model.dart';
 import 'package:focusi/features/home/date/model/task_model.dart';
 import 'package:focusi/features/home/date/repo/home_repo.dart';
@@ -283,6 +284,36 @@ HomeRepoImp(this.dio, {required ApiServecis apiService}) {
 } catch (e) {
   return left(ServerFailure(e.toString()));
 }
+  }
+
+  @override
+  Future<Either<Failure, List<QestionVedioModel>>> getAllVideos(String token)async {
+ try {
+    final response = await dio.get(
+      AppEndpoints.getAllVideos,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = response.data;
+      final List<QestionVedioModel> videos = data
+          .map((item) => QestionVedioModel.fromJson(item as Map<String, dynamic>))
+          .toList();
+      return right(videos);
+    } else {
+      return left(ServerFailure('Failed to load videos: ${response.statusCode}'));
+    }
+  } catch (e) {
+    if (e is DioError) {
+      return left(ServerFailure.fromDioError(e));
+    }
+    return left(ServerFailure(e.toString()));
+  }
   }
 }
 

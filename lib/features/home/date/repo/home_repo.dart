@@ -5,6 +5,7 @@ import 'package:focusi/core/errors/failure.dart';
 import 'package:focusi/features/auth/data/models/user_model.dart';
 import 'package:focusi/features/home/date/model/advice_model.dart';
 import 'package:focusi/features/home/date/model/feedback_model.dart';
+import 'package:focusi/features/home/date/model/question_vedio_model.dart';
 import 'package:focusi/features/home/date/model/story_model.dart';
 import 'package:focusi/features/home/date/model/task_model.dart';
 
@@ -22,6 +23,7 @@ abstract class HomeRepo {
 Future<Either<Failure, TaskModel>> updateTask(TaskModel task, String token);
  Future<Either<Failure, AdviceModel>> getAdvice(String token);
  Future<Either<Failure, List<StoryModel>>> getStories(String token);
+ Future<Either<Failure,List<QestionVedioModel>>> getAllVideos(String token);
 
 
 }

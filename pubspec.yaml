@@ -57,6 +57,9 @@ dependencies:
   image_picker: ^1.0.4
   flutter_rating: ^2.0.2
   url_launcher: ^6.2.5
+  video_player: ^2.10.0
+  just_audio: ^0.10.4
+          
 
 dev_dependencies:
   flutter_test:
@@ -84,9 +87,13 @@ flutter:
   assets:
     - assets/images/
     - assets\questions.json
-    - assets/web/
+    # - assets/web/
+    - assets/web/index.html
+    - assets/web/script.js
+    - assets/web/style.css
     - assets/web/images/
     - assets/web/audios/
+    - assets/web/shapesB1.mp4
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

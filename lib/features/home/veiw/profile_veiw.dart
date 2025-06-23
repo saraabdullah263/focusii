@@ -28,7 +28,6 @@ class ProfileVeiw extends StatefulWidget {
 class _ProfileVeiwState extends State<ProfileVeiw> {
   File? _image;
   bool _hasFetchedUser = false;
-  
 
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(
@@ -47,203 +46,228 @@ class _ProfileVeiwState extends State<ProfileVeiw> {
   }
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  if (!_hasFetchedUser) {
-    final token = CacheHelper.getData(key: 'userToken');
-    debugPrint("🔐 Retrieved Token: $token");
+    if (!_hasFetchedUser) {
+      final token = CacheHelper.getData(key: 'userToken');
+      debugPrint("🔐 Retrieved Token: $token");
 
-    if (token != null && token is String && token.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<UserCubit>().fetchCurrentUser(token);
-      });
+      if (token != null && token is String && token.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<UserCubit>().fetchCurrentUser(token);
+        });
 
-      _hasFetchedUser = true;
-    } else {
-      debugPrint('❌ Token is null or empty');
+        _hasFetchedUser = true;
+      } else {
+        debugPrint('❌ Token is null or empty');
+      }
     }
   }
-}
 
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
 
- @override
-Widget build(BuildContext context) {
-  final height = MediaQuery.of(context).size.height;
-  
+    return Scaffold(
+      body: BlocConsumer<UploadPictureCubit, UploadPictureState>(
+        listener: (context, state) {
+          if (state is UploadPictureSuccess) {
+            Fluttertoast.showToast(
+              msg: "Profile picture uploaded successfully",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.white,
+              textColor: AppColors.primaryColor,
+              fontSize: 16.0,
+            );
+            // Optionally refresh user data here if needed
+          } else if (state is UploadPictureFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Upload failed: ${state.error}')),
+            );
+          }
+        },
+        builder: (context, uploadState) {
+          return BlocConsumer<LogoutCubit, LogoutState>(
+            listener: (context, state) {
+              if (state is LogoutSuccess) {
+                CacheHelper.removeData(
+                  key: 'userToken',
+                ); // Clear stored token on logout
+                GoRouter.of(
+                  context,
+                ).go(AppRoutes.klogin); // Navigate to login page
+              } else if (state is LogoutFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Logout failed: ${state.error}')),
+                );
+              }
+            },
+            builder: (context, logoutState) {
+              return BlocConsumer<UserCubit, UserState>(
+                listener: (context, state) {
+                  if (state is UserFailure) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.error)));
+                  }
+                },
+                builder: (context, state) {
+                  if (state is UserLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-  return Scaffold(
-    body: BlocConsumer<UploadPictureCubit, UploadPictureState>(
-      listener: (context, state) {
-        if (state is UploadPictureSuccess) {
-           Fluttertoast.showToast(
-            msg: "Profile picture uploaded successfully",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor:Colors.white,
-            textColor: AppColors.primaryColor,
-            fontSize: 16.0,
-          );
-          // Optionally refresh user data here if needed
-        } else if (state is UploadPictureFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Upload failed: ${state.error}')),
-          );
-        }
-      },
-      builder: (context, uploadState) {
-        return BlocConsumer<LogoutCubit, LogoutState>(
-          listener: (context, state) {
-            if (state is LogoutSuccess) {
-              CacheHelper.removeData(key: 'userToken'); // Clear stored token on logout
-              GoRouter.of(context).go(AppRoutes.klogin); // Navigate to login page
-            } else if (state is LogoutFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Logout failed: ${state.error}')),
-              );
-            }
-          },
-          builder: (context, logoutState) {
-            return BlocConsumer<UserCubit, UserState>(
-              listener: (context, state) {
-                if (state is UserFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.error)),
-                  );
-                }
-              },
-              builder: (context, state) {
-                if (state is UserLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                  if (state is UserLoaded) {
+                    final user = state.user;
 
-                if (state is UserLoaded) {
-                  final user = state.user;
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Image.asset(AppImages.logoWhite),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                final token = CacheHelper.getData(key: 'userToken');
-                                if (token != null &&
-                                    token is String &&
-                                    token.isNotEmpty) {
-                                  context.read<LogoutCubit>().logoutUser(token);
-                                } else {
-                                  debugPrint('Logout failed: no token found');
-                                }
-                              },
-                              child: const Icon(
-                                Icons.logout,
-                                size: 35,
-                                color: Colors.white,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Image.asset(AppImages.logoWhite),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  final token = CacheHelper.getData(
+                                    key: 'userToken',
+                                  );
+                                  if (token != null &&
+                                      token is String &&
+                                      token.isNotEmpty) {
+                                    context.read<LogoutCubit>().logoutUser(
+                                      token,
+                                    );
+                                  } else {
+                                    debugPrint('Logout failed: no token found');
+                                  }
+                                },
+                                child: const Icon(
+                                  Icons.logout,
+                                  size: 35,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
 
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
-                            ),
-                            padding: EdgeInsets.all(height * 0.02),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: Colors.grey.shade200,
-                                    radius: 60,
-                                    backgroundImage:
-                                        _image != null
-                                            ? FileImage(_image!)
-                                            : NetworkImage(user.pictureUrl ?? '')
-                                                as ImageProvider,
-                                  ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Container(
+                              width: double.infinity,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                              ),
+                              padding: EdgeInsets.all(height * 0.02),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: Colors.grey.shade200,
+                                      radius: 60,
+                                      backgroundImage:
+                                          _image != null
+                                              ? FileImage(_image!)
+                                              : NetworkImage(
+                                                    user.pictureUrl ?? '',
+                                                  )
+                                                  as ImageProvider,
+                                    ),
 
-                                  SizedBox(height: height * 0.02),
+                                    SizedBox(height: height * 0.02),
 
-                                  CustomButton(
-                                    title: 'Upload Photo',
-                                    onPressed: _pickImage,
-                                  ),
+                                    CustomButton(
+                                      title: 'Upload Photo',
+                                      onPressed: _pickImage,
+                                    ),
 
-                                  SizedBox(height: height * 0.02),
+                                    SizedBox(height: height * 0.02),
 
-                                  BuildInfoRow(
-                                    label: 'Name: ',
-                                    value: user.name ?? '',
-                                  ),
-                                  BuildInfoRow(
-                                    label: 'Age: ',
-                                    value: '${user.age} years',
-                                  ),
-                                  // BuildInfoRow(
-                                  //   label: 'Gender: ',
-                                  //   value: user.gender ?? '',
-                                  // ),
-                                  BuildInfoRow(
-                                    label: 'Account Created: ',
-                                    value: user.dateOfCreation != null
-                                        ? user.dateOfCreation!
-                                            .toLocal()
-                                            .toString()
-                                            .split(' ')[0]
-                                        : 'Unknown',
-                                  ),
-                                  BuildInfoRow(
-                                    label: 'Assigned Class: ',
-                                    value: user.childClass??'',
-                                  ),
-                                  BuildInfoRow(label: 'Current Score: ', value: user.totalScore.toString()),
+                                    BuildInfoRow(
+                                      label: 'Name: ',
+                                      value: user.name ?? '',
+                                    ),
+                                    BuildInfoRow(
+                                      label: 'Age: ',
+                                      value: '${user.age} years',
+                                    ),
+                                    // BuildInfoRow(
+                                    //   label: 'Gender: ',
+                                    //   value: user.gender ?? '',
+                                    // ),
+                                    BuildInfoRow(
+                                      label: 'Account Created: ',
+                                      value:
+                                          user.dateOfCreation != null
+                                              ? user.dateOfCreation!
+                                                  .toLocal()
+                                                  .toString()
+                                                  .split(' ')[0]
+                                              : 'Unknown',
+                                    ),
+                                    BuildInfoRow(
+                                      label: 'Assigned Class: ',
+                                      value: user.childClass ?? '',
+                                    ),
+                                    BuildInfoRow(
+                                      label: 'Current Score: ',
+                                      value: user.totalScore.toString(),
+                                    ),
 
-                                  SizedBox(height: height * 0.03),
+                                    SizedBox(height: height * 0.03),
 
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      CustomButton(
-                                        title: 'Edit Profile',
-                                        onPressed: () {},
-                                      ),
-                                      CustomButton(
-                                        title: 'FeedBack',
-                                        onPressed: () =>
-                                            GoRouter.of(context).push(AppRoutes.kfeedbackVeiw),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        CustomButton(
+                                          title: 'Edit Profile',
+                                          onPressed: () {
+                                            GoRouter.of(context).push(AppRoutes.kchildrenResult);
+                                          },
+                                        ),
+                                        CustomButton(
+                                          title: 'FeedBack',
+                                          onPressed:
+                                              () => GoRouter.of(
+                                                context,
+                                              ).push(AppRoutes.kfeedbackVeiw),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: height * 0.03),
+                                    CustomButton(
+                                      title: 'Go to your reports:',
+                                      onPressed:
+                                          () => GoRouter.of(
+                                            context,
+                                          ).push(AppRoutes.kreportsVeiw),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                }
+                      ],
+                    );
+                  }
 
-                return const Center(child: Text('No user data'));
-              },
-            );
-          },
-        );
-      },
-    ),
-  );
-}
-
+                  return const Center(child: Text('No user data'));
+                },
+              );
+            },
+          );
+        },
+      ),
+    );
   }
-
+}

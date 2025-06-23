@@ -34,7 +34,9 @@ class HomeVeiw extends StatelessWidget {
               padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*.07,vertical: MediaQuery.of(context).size.height*.03),
               child: Column(
                 children: [
-                  CustomElvatedButton(title: 'Videos', onPressed: () {}),
+                  CustomElvatedButton(title: 'Videos', onPressed: () {
+                     GoRouter.of(context).go(AppRoutes.kvideoVeiw);
+                  }),
                   SizedBox(height: MediaQuery.of(context).size.height*.03,),
                   CustomElvatedButton(title: 'Games', onPressed: () {}),
                   SizedBox(height: MediaQuery.of(context).size.height*.03,),

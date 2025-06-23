@@ -1,18 +1,22 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:focusi/core/utles/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusi/core/helper_function.dart/cache_helper.dart';
 import 'package:focusi/core/utles/app_images.dart';
 import 'package:focusi/core/utles/app_routes.dart';
 import 'package:focusi/core/widget/card_widget.dart';
 import 'package:focusi/core/widget/custom_elvated_button.dart';
 import 'package:focusi/core/widget/state_widget.dart';
 import 'package:focusi/core/widget/timer_widget.dart';
-import 'dart:async';
-import 'package:camera/camera.dart';
 import 'package:focusi/features/children_test/children_test_pages/game_test/model_veiw/card_model.dart';
+import 'package:focusi/features/children_test/children_test_pages/vedio_test/model_veiw/cubit/camera_tracking_cubit.dart';
+import 'package:focusi/features/children_test/children_test_pages/vedio_test/model_veiw/cubit/camera_tracking_state.dart';
 import 'package:go_router/go_router.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+  const GameScreen({super.key}); 
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -38,33 +42,24 @@ class _GameScreenState extends State<GameScreen> {
   late CameraController _cameraController;
   bool isCameraInitialized = false;
 
-  @override
-  void initState() {
-    super.initState();
-    //startGame();
-  }
-
- 
   Future<void> _initializeCamera() async {
-  final cameras = await availableCameras();
-  final frontCamera = cameras.firstWhere(
-    (camera) => camera.lensDirection == CameraLensDirection.front,
-    orElse: () => cameras.first,
-  );
+    final cameras = await availableCameras();
+    final frontCamera = cameras.firstWhere(
+      (camera) => camera.lensDirection == CameraLensDirection.front,
+      orElse: () => cameras.first,
+    );
 
-  _cameraController = CameraController(
-    frontCamera,
-    ResolutionPreset.high,
-  );
+    _cameraController = CameraController(
+      frontCamera,
+      ResolutionPreset.high,
+    );
 
-  await _cameraController.initialize(); // <— important: wait for camera to finish initializing
+    await _cameraController.initialize();
 
-  setState(() {
-    isCameraInitialized = true;
-  });
-}
-
-
+    setState(() {
+      isCameraInitialized = true;
+    });
+  }
 
   void startGame() {
     setState(() {
@@ -78,20 +73,21 @@ class _GameScreenState extends State<GameScreen> {
       showAllCardsTemporarily = false;
       deck = shuffle([...symbols, ...symbols].map((value) => CardModel(value: value)).toList());
 
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         setState(() {
-          deck.forEach((card) => card.flipped = false);
-          showAllCardsTemporarily = false;
+          for (var card in deck) {
+            card.flipped = false;
+          }
         });
       });
 
-      timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      timer = Timer.periodic(const Duration(seconds: 1), (_) {
         setState(() {
           timeElapsed++;
           if (timeElapsed >= 120) {
             showGameOver = true;
             gameStarted = false;
-            timer.cancel();
+            timer?.cancel();
           }
         });
       });
@@ -103,18 +99,23 @@ class _GameScreenState extends State<GameScreen> {
     return cards;
   }
 
-  void flipCard(int index) {
+  void flipCard(int index) async {
     if (flippedCards.length >= 2 || deck[index].flipped || deck[index].matched) return;
 
     setState(() {
       deck[index].flipped = true;
       flippedCards.add(index);
       totalFlips++;
-
-      if (flippedCards.length == 2) {
-        Future.delayed(Duration(milliseconds: 800), checkMatch);
-      }
     });
+
+    if (isCameraEnabled && isCameraInitialized) {
+      final file = await _cameraController.takePicture();
+      context.read<CameraTrackingCubit>().trackImage(File(file.path));
+    }
+
+    if (flippedCards.length == 2) {
+      Future.delayed(const Duration(milliseconds: 800), checkMatch);
+    }
   }
 
   void checkMatch() {
@@ -142,167 +143,143 @@ class _GameScreenState extends State<GameScreen> {
     flippedCards.clear();
   }
 
-  void toggleSound() {
-    setState(() {
-      isSoundOn = !isSoundOn;
-    });
-  }
-
   void submitResult() {
-    final result = {
-      'matchedPairs': matchedPairs,
-      'totalFlips': totalFlips,
-      'timeElapsed': timeElapsed,
-      'status': showCongrats ? 'completed' : 'timeout',
-    };
+  final cubit = context.read<CameraTrackingCubit>();
+  final token = CacheHelper.getData(key: 'userToken');
 
-    print("Submitting result: $result");
-
-    showDialog(
-  context: context,
-  builder: (_) => AlertDialog(
-    backgroundColor: Colors.white, // Set background to black
-    title: Text(
-      "Result Submitted",
-      style: TextStyle(color:AppColors.primaryColor), // Set title text color to white
-    ),
-    content: Text(
-      "Thanks for playing!",
-      style: TextStyle(color: AppColors.primaryColor), // Set content text color to white
-    ),
-    actions: [
-      TextButton(
-        onPressed: () {
-            GoRouter.of(context).push(AppRoutes.kmainVeiw);
-        },
-        child: Text(
-          "OK",
-          style: TextStyle(color:AppColors.primaryColor ), // Set button text color to white
-        ),
-      )
-    ],
-  ),
-);
-
-  }
-
-
-void toggleCamera(bool value) {
-  setState(() {
-    isCameraEnabled = value;
-  });
-
-  if (value) {
-    _initializeCamera().then((_) {
-      startGame(); // only start game after camera is ready
-    });
-  } else {
-    if (isCameraInitialized) {
-      _cameraController.dispose();
-    }
-    setState(() {
-      isCameraInitialized = false;
-      showGame = false;
-      gameStarted = false;
-      deck.clear();
-    });
-  }
+  cubit.submitTrackingResult(
+    token,
+    truePhotos: cubit.getTruePhotos,
+    totalPhotos: cubit.getTotalPhotos,
+  );
 }
 
 
+  void toggleCamera(bool value) {
+    setState(() {
+      isCameraEnabled = value;
+    });
+
+    if (value) {
+      _initializeCamera().then((_) {
+        startGame();
+      });
+    } else {
+      if (isCameraInitialized) {
+        _cameraController.dispose();
+      }
+      setState(() {
+        isCameraInitialized = false;
+        showGame = false;
+        gameStarted = false;
+        deck.clear();
+      });
+    }
+  }
 
   @override
   void dispose() {
-    super.dispose();
-    if (isCameraEnabled) {
+    if (isCameraInitialized) {
       _cameraController.dispose();
     }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Image.asset(AppImages.logoWhite),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * .06),
-             if (!isCameraEnabled)
-  Padding(
-    padding: const EdgeInsets.all(10.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
-          "Open Camera",
-          style: TextStyle(
-            fontSize: 22,
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Switch(
-          value: isCameraEnabled,
-          onChanged: toggleCamera,
-          activeColor: Colors.white,
-          activeTrackColor: Colors.green,
-          inactiveThumbColor: Colors.grey,
-          inactiveTrackColor: Colors.white,
-        ),
-      ],
-    ),
-  ),
-
-             
-              if (isCameraEnabled && isCameraInitialized)
-//   SizedBox(
-//     width: 200,
-//     height: 200,
-//     child: CameraPreview(_cameraController),
-//   )
-// else if (isCameraEnabled)
-//   CustomLoading(),
-
-              if (gameStarted) TimerWidget(timeElapsed: timeElapsed),
-              SizedBox(height: MediaQuery.of(context).size.height * .04),
-              StatsWidget(matchedPairs: matchedPairs, totalFlips: totalFlips),
-              SizedBox(height: MediaQuery.of(context).size.height * .08),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * .04,
-                ),
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemCount: deck.length,
-                  itemBuilder: (context, index) {
-                    return CardWidget(card: deck[index], onTap: () => flipCard(index));
-                  },
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * .08),
-              if (showCongrats || showGameOver)
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * .08,
-                  ),
-                  child: CustomElvatedButton(
-                    title: 'Submit',
-                    onPressed: submitResult,
-                  ),
+    return BlocConsumer<CameraTrackingCubit, CameraTrackingState>(
+      listener: (context, state) {
+        if (state is CameraTrackingSubmitSuccess) {
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: const Text("Tracking Submitted"),
+              content: const Text("Thanks for playing! you have submitted to your level"),
+              actions: [
+                TextButton(
+                  onPressed: () => GoRouter.of(context).push(AppRoutes.kmainVeiw),
+                  child: const Text("OK"),
                 )
-            ],
+              ],
+            ),
+          );
+        } else if (state is CameraTrackingFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Error: ${state.error}")),
+          );
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Image.asset(AppImages.logoWhite),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .06),
+                  if (!isCameraEnabled)
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Open Camera",
+                            style: TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w500),
+                          ),
+                          Switch(
+                            value: isCameraEnabled,
+                            onChanged: toggleCamera,
+                            activeColor: Colors.white,
+                            activeTrackColor: Colors.green,
+                            inactiveThumbColor: Colors.grey,
+                            inactiveTrackColor: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (isCameraEnabled && isCameraInitialized)
+                  if (gameStarted) TimerWidget(timeElapsed: timeElapsed),
+                  SizedBox(height: MediaQuery.of(context).size.height * .04),
+                  StatsWidget(matchedPairs: matchedPairs, totalFlips: totalFlips),
+                  SizedBox(height: MediaQuery.of(context).size.height * .08),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * .04,
+                    ),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 5,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: deck.length,
+                      itemBuilder: (context, index) {
+                        return CardWidget(card: deck[index], onTap: () => flipCard(index));
+                      },
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .08),
+                  if (showCongrats || showGameOver)
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * .08,
+                      ),
+                      child: CustomElvatedButton(
+                        title: 'Submit',
+                        onPressed: submitResult,
+                      ),
+                    )
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
